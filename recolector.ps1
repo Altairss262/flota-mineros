@@ -156,9 +156,33 @@ if ($historial.Count -gt $MAX_HISTORIAL) {
 #  ALERTAS
 # ============================================================
 
+# El selector de avisos se puede editar desde GitHub (movil, otro PC, lo que sea).
+# Antes de leerlo, miramos si hay una version mas nueva en el repositorio.
 $fCfg = Join-Path $RAIZ "alertas.config.json"
 $cfg = $null
-if (Test-Path $fCfg) { try { $cfg = Get-Content $fCfg -Raw -Encoding utf8 | ConvertFrom-Json } catch { } }
+$origenCfg = "local"
+
+if (Test-Path (Join-Path $RAIZ ".git")) {
+    Push-Location $RAIZ
+    try {
+        git fetch origin main --quiet 2>&1 | Out-Null
+        $remoto = git show origin/main:alertas.config.json 2>$null
+        if (-not [string]::IsNullOrWhiteSpace($remoto)) {
+            $prueba = $null
+            try { $prueba = $remoto | ConvertFrom-Json } catch { }
+            if ($prueba -and $prueba.avisos) {
+                $cfg = $prueba
+                $origenCfg = "GitHub"
+                # guardamos una copia local para que coincidan
+                $remoto | Out-File $fCfg -Encoding utf8
+            }
+        }
+    } catch { } finally { Pop-Location }
+}
+
+if ($null -eq $cfg -and (Test-Path $fCfg)) {
+    try { $cfg = Get-Content $fCfg -Raw -Encoding utf8 | ConvertFrom-Json } catch { }
+}
 
 # Credenciales del correo: fichero aparte, fuera de git
 $correo = $null
@@ -337,6 +361,7 @@ $fDatos = Join-Path $RAIZ "datos.json"
 
 Write-Host ("  {0} TH/s   {1} W   {2}/{3} mineros   {4} placas   {5} alertas   correo: {6}" -f `
     $totalTh, $totalW, $online.Count, $MINEROS.Count, $totalOk, $alertas.Count, $estadoCorreo) -ForegroundColor Cyan
+Write-Host ("  selector de avisos: leido de {0}" -f $origenCfg) -ForegroundColor DarkGray
 
 if ($Ver) {
     foreach ($l in $lecturas) {
