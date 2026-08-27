@@ -164,6 +164,37 @@
   .placa.sin_corriente { border-left: 3px solid var(--critico); }
   .placa.ausente { border-left: 3px solid var(--eje); opacity: .6; }
 
+  /* ---------- selector de avisos ---------- */
+  .sel-cab { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .sel-cab a { font-size: 12.5px; text-decoration: none; }
+  .sel-cab a:hover { text-decoration: underline; }
+  .sel-lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 7px; margin-top: 12px; }
+  .sel-item {
+    display: flex; align-items: center; gap: 9px;
+    padding: 9px 11px; border-radius: 8px;
+    border: 1px solid var(--borde); background: var(--plano);
+    font-size: 13.5px;
+  }
+  .sel-item.on { border-color: rgba(12,163,12,.32); }
+  .interruptor {
+    flex: 0 0 auto; width: 30px; height: 17px; border-radius: 10px;
+    background: var(--eje); position: relative; transition: background .2s;
+  }
+  .interruptor::after {
+    content: ""; position: absolute; top: 2.5px; left: 2.5px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--tarjeta); transition: transform .2s;
+    box-shadow: 0 1px 2px rgba(0,0,0,.25);
+  }
+  .sel-item.on .interruptor { background: var(--bueno); }
+  .sel-item.on .interruptor::after { transform: translateX(13px); }
+  .sel-txt { line-height: 1.3; }
+  .sel-txt .d { display: block; font-size: 11.5px; color: var(--tinta-3); }
+  .sel-item.off .sel-txt { color: var(--tinta-3); }
+  .sel-estado { margin-left: auto; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+  .sel-item.on .sel-estado { color: var(--bueno); }
+  .sel-item.off .sel-estado { color: var(--tinta-3); }
+
   footer { margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--borde); font-size: 12px; color: var(--tinta-3); }
   a { color: var(--serie); }
   .vacio { text-align: center; padding: 44px 20px; color: var(--tinta-3); }
@@ -190,6 +221,16 @@
   </section>
 
   <div class="rejilla" id="mineros"></div>
+
+  <section class="panel" id="panel-selector" style="margin-top:20px; display:none">
+    <div class="sel-cab">
+      <h2 style="margin:0">Avisos por correo</h2>
+      <a href="https://github.com/Altairss262/flota-mineros/edit/main/alertas.config.json"
+         target="_blank" rel="noopener">cambiar &rarr;</a>
+    </div>
+    <p class="sub" id="sel-sub" style="margin-top:2px">qué te avisa el sistema ahora mismo</p>
+    <div class="sel-lista" id="selector"></div>
+  </section>
 
   <footer>
     Los datos los recoge un equipo en local y se publican aquí cada pocos minutos.
@@ -402,6 +443,24 @@
     }).join("");
   }
 
+  // ---------- selector de avisos ----------
+  function pintaSelector(d) {
+    var panel = $("panel-selector"), c = $("selector");
+    var s = d.selector || [];
+    if (!s.length) { panel.style.display = "none"; return; }
+    panel.style.display = "";
+    var activos = s.filter(function (i) { return i.activado; }).length;
+    $("sel-sub").textContent = activos + " de " + s.length + " avisos activados";
+    c.innerHTML = s.map(function (i) {
+      return '<div class="sel-item ' + (i.activado ? "on" : "off") + '">' +
+        '<span class="interruptor" role="img" aria-label="' +
+        (i.activado ? "activado" : "desactivado") + '"></span>' +
+        '<span class="sel-txt">' + escapa(i.nombre) +
+        (i.detalle ? '<span class="d">' + escapa(i.detalle) + "</span>" : "") +
+        '</span><span class="sel-estado">' + (i.activado ? "sí" : "no") + "</span></div>";
+    }).join("");
+  }
+
   // ---------- frescura ----------
   var ultUnix = 0;
   function pintaFrescura() {
@@ -425,6 +484,7 @@
         pintaTiles(d);
         pintaGrafica(d);
         pintaMineros(d);
+        pintaSelector(d);
       })
       .catch(function () {
         $("frescura").innerHTML = '<span class="pulso viejo"></span>no se pudieron cargar los datos';

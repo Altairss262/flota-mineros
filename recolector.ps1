@@ -351,6 +351,35 @@ $datos = [ordered]@{
     mineros   = $lecturas
     alertas   = $alertas
     historial = $historial
+    selector  = $null
+}
+
+# El selector de avisos, para mostrarlo en el dashboard
+if ($cfg -and $cfg.avisos) {
+    $sel = @()
+    $nombres = [ordered]@{
+        minero_caido      = "Minero deja de responder"
+        placa_perdida     = "Una placa deja de minar"
+        temperatura_alta  = "Temperatura alta"
+        ventilador_parado = "Ventilador parado o flojo"
+        caida_de_hashrate = "Caida de hashrate"
+        chips_incompletos = "Placa con menos de 63 chips"
+        recuperado        = "Avisar de recuperaciones"
+    }
+    foreach ($k in $nombres.Keys) {
+        $a = $cfg.avisos.$k
+        if ($null -eq $a) { continue }
+        $detalle = ""
+        if ($null -ne $a.grados)     { $detalle = "por encima de $($a.grados) grados" }
+        if ($null -ne $a.porcentaje) { $detalle = "caida de mas del $($a.porcentaje)%" }
+        $sel += [ordered]@{
+            clave    = $k
+            nombre   = $nombres[$k]
+            activado = [bool]$a.activado
+            detalle  = $detalle
+        }
+    }
+    $datos.selector = $sel
 }
 
 $fDatos = Join-Path $RAIZ "datos.json"

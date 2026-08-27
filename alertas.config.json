@@ -1,4 +1,4 @@
-{
+﻿{
   "_ayuda": "Selector de avisos. Pon true o false en cada uno. Los cambios se aplican solos, no hay que reiniciar nada. Este archivo SI se sube a GitHub: no pongas ninguna contrasena aqui.",
 
   "avisos": {
