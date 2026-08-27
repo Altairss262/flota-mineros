@@ -195,6 +195,33 @@
   .sel-item.on .sel-estado { color: var(--bueno); }
   .sel-item.off .sel-estado { color: var(--tinta-3); }
 
+  .sel-item { cursor: pointer; user-select: none; transition: border-color .15s, background .15s; }
+  .sel-item:hover { background: var(--elevado); }
+  .sel-item:focus-visible { outline: 2px solid var(--serie); outline-offset: 2px; }
+  .sel-item.tocado { border-color: var(--serie); background: var(--serie-suave); }
+  .sel-nota {
+    font-size: 12px; color: var(--tinta-3); margin-top: 11px;
+    padding-top: 10px; border-top: 1px solid var(--borde); line-height: 1.45;
+  }
+  .pendiente {
+    margin-top: 12px; padding: 13px 14px; border-radius: 9px;
+    background: var(--aviso-fondo); border: 1px solid rgba(250,178,25,.45);
+    font-size: 13.5px;
+  }
+  .pendiente b { font-weight: 650; }
+  .pendiente ul { margin: 7px 0 11px; padding-left: 19px; }
+  .pendiente li { margin-bottom: 3px; }
+  .pendiente .btns { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn {
+    font: inherit; font-size: 13px; font-weight: 600;
+    padding: 7px 13px; border-radius: 7px; cursor: pointer;
+    border: 1px solid var(--borde); background: var(--tarjeta); color: var(--tinta);
+    text-decoration: none; display: inline-block;
+  }
+  .btn:hover { background: var(--elevado); }
+  .btn.principal { background: var(--serie); border-color: var(--serie); color: #fff; }
+  .btn.principal:hover { filter: brightness(1.08); }
+
   footer { margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--borde); font-size: 12px; color: var(--tinta-3); }
   a { color: var(--serie); }
   .vacio { text-align: center; padding: 44px 20px; color: var(--tinta-3); }
@@ -230,6 +257,8 @@
     </div>
     <p class="sub" id="sel-sub" style="margin-top:2px">qué te avisa el sistema ahora mismo</p>
     <div class="sel-lista" id="selector"></div>
+    <div id="pendiente"></div>
+    <p class="sel-nota" id="sel-nota"></p>
   </section>
 
   <footer>
@@ -444,21 +473,120 @@
   }
 
   // ---------- selector de avisos ----------
+  var selOriginal = [], selActual = [], selCrudo = null;
+
+  function copiaLista(l) {
+    return l.map(function (i) {
+      return { clave: i.clave, nombre: i.nombre, activado: i.activado, detalle: i.detalle };
+    });
+  }
+
   function pintaSelector(d) {
-    var panel = $("panel-selector"), c = $("selector");
+    var panel = $("panel-selector");
     var s = d.selector || [];
     if (!s.length) { panel.style.display = "none"; return; }
     panel.style.display = "";
-    var activos = s.filter(function (i) { return i.activado; }).length;
-    $("sel-sub").textContent = activos + " de " + s.length + " avisos activados";
-    c.innerHTML = s.map(function (i) {
-      return '<div class="sel-item ' + (i.activado ? "on" : "off") + '">' +
-        '<span class="interruptor" role="img" aria-label="' +
-        (i.activado ? "activado" : "desactivado") + '"></span>' +
+    selCrudo = d.selectorCrudo || null;
+
+    var tocando = selActual.length && selActual.some(function (x, i) {
+      return selOriginal[i] && x.activado !== selOriginal[i].activado;
+    });
+    selOriginal = copiaLista(s);
+    if (!tocando) { selActual = copiaLista(s); }
+    dibujaSelector();
+  }
+
+  function dibujaSelector() {
+    var c = $("selector");
+    var activos = selActual.filter(function (i) { return i.activado; }).length;
+    $("sel-sub").textContent = activos + " de " + selActual.length + " avisos activados";
+
+    c.innerHTML = selActual.map(function (i, idx) {
+      var tocado = selOriginal[idx] && i.activado !== selOriginal[idx].activado;
+      return '<div class="sel-item ' + (i.activado ? "on" : "off") + (tocado ? " tocado" : "") +
+        '" role="switch" tabindex="0" aria-checked="' + i.activado + '" data-i="' + idx + '">' +
+        '<span class="interruptor"></span>' +
         '<span class="sel-txt">' + escapa(i.nombre) +
         (i.detalle ? '<span class="d">' + escapa(i.detalle) + "</span>" : "") +
         '</span><span class="sel-estado">' + (i.activado ? "sí" : "no") + "</span></div>";
     }).join("");
+
+    Array.prototype.forEach.call(c.querySelectorAll(".sel-item"), function (el) {
+      el.addEventListener("click", function () { alterna(+el.getAttribute("data-i")); });
+      el.addEventListener("keydown", function (ev) {
+        if (ev.key === " " || ev.key === "Enter") { ev.preventDefault(); alterna(+el.getAttribute("data-i")); }
+      });
+    });
+
+    pintaPendiente();
+    $("sel-nota").innerHTML =
+      "<b>Estos interruptores no aplican el cambio solos.</b> P\u00falsalos para ver c\u00f3mo quedar\u00eda; " +
+      "para que surta efecto hay que guardarlo en el archivo de configuraci\u00f3n. " +
+      "As\u00ed nadie puede alterarte los avisos desde aqu\u00ed.";
+  }
+
+  function alterna(i) {
+    if (!selActual[i]) return;
+    selActual[i].activado = !selActual[i].activado;
+    dibujaSelector();
+  }
+
+  function cambios() {
+    return selActual.filter(function (x, i) {
+      return selOriginal[i] && x.activado !== selOriginal[i].activado;
+    });
+  }
+
+  function jsonNuevo() {
+    if (!selCrudo) return null;
+    var copia = JSON.parse(JSON.stringify(selCrudo));
+    selActual.forEach(function (x) {
+      if (copia.avisos && copia.avisos[x.clave]) { copia.avisos[x.clave].activado = x.activado; }
+    });
+    return JSON.stringify(copia, null, 2);
+  }
+
+  function pintaPendiente() {
+    var caja = $("pendiente");
+    var ch = cambios();
+    if (!ch.length) { caja.innerHTML = ""; return; }
+
+    caja.innerHTML = '<div class="pendiente"><b>Cambios sin guardar</b><ul>' +
+      ch.map(function (x) {
+        return "<li>" + escapa(x.nombre) + " &rarr; <b>" +
+          (x.activado ? "activado" : "desactivado") + "</b></li>";
+      }).join("") + "</ul>" +
+      '<div class="btns">' +
+      (selCrudo ? '<button class="btn principal" id="btn-copiar">Copiar la configuraci\u00f3n</button>' : "") +
+      '<a class="btn" href="https://github.com/Altairss262/flota-mineros/edit/main/alertas.config.json" target="_blank" rel="noopener">Abrir el archivo</a>' +
+      '<button class="btn" id="btn-deshacer">Deshacer</button>' +
+      "</div></div>";
+
+    var bc = $("btn-copiar");
+    if (bc) {
+      bc.addEventListener("click", function () {
+        var txt = jsonNuevo();
+        if (!txt) return;
+        var ok = function () {
+          bc.textContent = "Copiado \u2014 p\u00e9galo en el archivo";
+          setTimeout(function () { bc.textContent = "Copiar la configuraci\u00f3n"; }, 2600);
+        };
+        if (navigator.clipboard) { navigator.clipboard.writeText(txt).then(ok, function () { copiaManual(txt, ok); }); }
+        else { copiaManual(txt, ok); }
+      });
+    }
+    $("btn-deshacer").addEventListener("click", function () {
+      selActual = copiaLista(selOriginal);
+      dibujaSelector();
+    });
+  }
+
+  function copiaManual(txt, ok) {
+    var ta = document.createElement("textarea");
+    ta.value = txt; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); ok(); } catch (e) { }
+    document.body.removeChild(ta);
   }
 
   // ---------- frescura ----------

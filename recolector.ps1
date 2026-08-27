@@ -380,6 +380,8 @@ if ($cfg -and $cfg.avisos) {
         }
     }
     $datos.selector = $sel
+    # el archivo completo, para que el dashboard pueda generar el JSON a pegar
+    $datos | Add-Member -NotePropertyName selectorCrudo -NotePropertyValue $cfg -Force
 }
 
 $fDatos = Join-Path $RAIZ "datos.json"
@@ -405,6 +407,17 @@ if ($Ver) {
 # ============================================================
 
 if ($SinSubir) { exit 0 }
+
+# Si toda la flota sigue apagada desde la lectura anterior, no subimos nada:
+# seria repetir lo mismo cada 2 minutos durante horas de apagon.
+# Se sube una vez cuando se cae todo, y otra vez cuando vuelve la corriente.
+if ($online.Count -eq 0 -and $anterior) {
+    $antesOnline = @($anterior.mineros | Where-Object { $_.online }).Count
+    if ($antesOnline -eq 0) {
+        Write-Host "  Todo apagado y sin novedades: no subo nada." -ForegroundColor DarkGray
+        exit 0
+    }
+}
 
 Push-Location $RAIZ
 try {
