@@ -53,8 +53,8 @@ if (-not (Test-Path (Join-Path $RAIZ "README.md"))) {
 
 # --- remoto ---
 $url = "https://github.com/$Usuario/$Repo.git"
-$remotoActual = git remote get-url origin 2>$null
-if ($remotoActual) {
+$remotos = @(git remote 2>$null)
+if ($remotos -contains "origin") {
     git remote set-url origin $url
     Write-Host "  [ok] remoto actualizado: $url" -ForegroundColor Green
 } else {
