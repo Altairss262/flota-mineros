@@ -65,7 +65,7 @@ caída y deja de subir datos hasta que vuelve la corriente.
 La parte más útil del proyecto no es el código: es haber aprendido a **leer los logs**
 de Braiins OS para saber qué falla sin desmontar nada.
 
-De todas las averías encontradas en la flota, **solo una era una placa realmente muerta**.
+De todas las averías encontradas en la flota, **solo dos eran placas realmente muertas**.
 El resto eran cables, conectores y fuentes.
 
 ### Tabla de síntomas
@@ -168,17 +168,48 @@ Máximo un correo cada 15 minutos, y solo cuando el estado **cambia**.
 
 ---
 
+## La causa de fondo: los conectores
+
+Los ramales originales de las fuentes **se quemaron**. Se rehicieron con cable de
+calibre 14 — más grueso que el 18 de fábrica, con margen de sobra para los ~25 A
+que pide cada placa. Pero los **conectores PCIe** siguen siendo el eslabón débil:
+se van achicharrando poco a poco, y cada conexión degradada calienta más y
+acelera la siguiente.
+
+Ese desgaste progresivo es lo que ha ido rompiendo la flota, no las placas.
+
+**Pendiente principal: rehacer las conexiones con conectores PCIe nuevos** cuando lleguen.
+
+Al montarlos conviene:
+- Crimpados firmes — el cable 14 va apretado en un terminal pensado para el 18,
+  y un crimpado flojo es una resistencia que se calienta
+- Sujetar los cables cerca del conector con una brida, para que su peso no
+  cuelgue de los pines
+- Revisar los conectores viejos con linterna buscando plástico derretido o
+  contactos ennegrecidos, y descartar los tocados
+
+---
+
 ## Pendiente
 
+- [ ] **Conectores PCIe nuevos** — en camino. Rehacer las conexiones de toda la flota.
 - [ ] **kiwi04** — placas 7 y 8 sin corriente con los cables puestos. Probable fuente.
       Prueba: pasarle a la placa 7 el cable de la placa 6, que sí funciona.
 - [ ] **Sara04** — verificar que el ventilador nuevo da las mismas vueltas que el otro
       (el viejo iba a 2.280 rpm contra 5.940 del compañero).
 - [ ] **Sara00** — placa 6 con ~32.000 interferencias: conector de la placa desgastado.
       Es la única que justificaría desmontar para cambiar el conector.
-- [ ] **Sara03** — placa 6 sin probar. Le faltan cable de datos y de corriente a la vez.
-- [ ] Pasar el recolector a un dispositivo que esté siempre encendido (un móvil
-      con Termux o una Raspberry) para no depender del PC.
+- [ ] Pasar el recolector a un dispositivo siempre encendido (un móvil con Termux
+      o una Raspberry) para no depender del PC.
+
+### Placas descartadas
+
+| Placa | Estado |
+|---|---|
+| **Sara03, placa 6** | Muerta. Falla en el primer chip. Confirmada en dos slots con dos cables distintos. |
+| **Sara00, placa 7** | Muerta. Hace corto y ahoga la fuente. No volver a montarla. |
+
+Sirven como donantes de chips y de conectores.
 
 ---
 
