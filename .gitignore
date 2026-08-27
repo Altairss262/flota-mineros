@@ -1,0 +1,11 @@
+﻿# Nunca subir credenciales
+*.password
+*.secret
+credenciales*
+config-local*
+
+# Ficheros temporales
+*.tmp
+*.bak
+Thumbs.db
+desktop.ini
