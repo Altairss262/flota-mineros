@@ -14,7 +14,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $RAIZ = Split-Path -Parent $MyInvocation.MyCommand.Path
-$SCRIPT = Join-Path $RAIZ "monitor-flota.ps1"
+$SCRIPT = Join-Path $RAIZ "recolector.ps1"
 $TAREA = "MonitorFlotaMineros"
 
 if ($Quitar) {
@@ -31,7 +31,7 @@ if ($Quitar) {
     exit 0
 }
 
-if (-not (Test-Path $SCRIPT)) { throw "No encuentro monitor-flota.ps1 en $RAIZ" }
+if (-not (Test-Path $SCRIPT)) { throw "No encuentro recolector.ps1 en $RAIZ" }
 
 # Si ya existe, la quitamos para volver a crearla limpia
 try { Unregister-ScheduledTask -TaskName $TAREA -Confirm:$false -ErrorAction Stop } catch { }

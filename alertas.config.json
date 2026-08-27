@@ -1,0 +1,36 @@
+{
+  "_ayuda": "Selector de avisos. Pon true o false en cada uno. Los cambios se aplican solos, no hay que reiniciar nada. Este archivo SI se sube a GitHub: no pongas ninguna contrasena aqui.",
+
+  "avisos": {
+    "minero_caido": {
+      "activado": false,
+      "_ayuda": "Desactivado a proposito: con cortes de luz diarios esto no es una novedad."
+    },
+    "placa_perdida": {
+      "activado": true,
+      "_ayuda": "Una placa que estaba minando deja de hacerlo, con el minero encendido. Esto SI es una averia."
+    },
+    "temperatura_alta": {
+      "activado": true,
+      "grados": 95,
+      "_ayuda": "Aviso cuando un chip pasa de estos grados."
+    },
+    "ventilador_parado": {
+      "activado": true,
+      "_ayuda": "Un ventilador se para, o rinde menos de la mitad que su companero."
+    },
+    "caida_de_hashrate": {
+      "activado": true,
+      "porcentaje": 25,
+      "_ayuda": "El hashrate de un minero encendido cae mas de este porcentaje."
+    },
+    "chips_incompletos": {
+      "activado": false,
+      "_ayuda": "Una placa mina con menos de 63 chips. Desactivado porque ya sabes cuales son."
+    },
+    "recuperado": {
+      "activado": true,
+      "_ayuda": "Avisa tambien cuando algo vuelve a la normalidad."
+    }
+  }
+}

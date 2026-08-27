@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flota Altairss</title>
+<meta name="description" content="Estado en vivo de la flota de mineros">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛏️</text></svg>">
+<style>
+  :root {
+    color-scheme: light;
+    --plano:        #f9f9f7;
+    --tarjeta:      #fcfcfb;
+    --elevado:      #f2f2ef;
+    --tinta:        #0b0b0b;
+    --tinta-2:      #52514e;
+    --tinta-3:      #898781;
+    --rejilla:      #e1e0d9;
+    --eje:          #c3c2b7;
+    --borde:        rgba(11,11,11,0.10);
+    --serie:        #2a78d6;
+    --serie-suave:  rgba(42,120,214,0.14);
+    --bueno:        #0ca30c;
+    --aviso:        #fab219;
+    --serio:        #ec835a;
+    --critico:      #d03b3b;
+    --bueno-fondo:  rgba(12,163,12,0.10);
+    --aviso-fondo:  rgba(250,178,25,0.16);
+    --critico-fondo:rgba(208,59,59,0.10);
+    --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --plano:        #0d0d0d;
+      --tarjeta:      #1a1a19;
+      --elevado:      #232321;
+      --tinta:        #ffffff;
+      --tinta-2:      #c3c2b7;
+      --tinta-3:      #898781;
+      --rejilla:      #2c2c2a;
+      --eje:          #383835;
+      --borde:        rgba(255,255,255,0.10);
+      --serie:        #3987e5;
+      --serie-suave:  rgba(57,135,229,0.18);
+      --bueno-fondo:  rgba(12,163,12,0.16);
+      --aviso-fondo:  rgba(250,178,25,0.14);
+      --critico-fondo:rgba(208,59,59,0.16);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --plano: #0d0d0d; --tarjeta: #1a1a19; --elevado: #232321;
+    --tinta: #ffffff; --tinta-2: #c3c2b7; --tinta-3: #898781;
+    --rejilla: #2c2c2a; --eje: #383835; --borde: rgba(255,255,255,0.10);
+    --serie: #3987e5; --serie-suave: rgba(57,135,229,0.18);
+    --bueno-fondo: rgba(12,163,12,0.16); --aviso-fondo: rgba(250,178,25,0.14);
+    --critico-fondo: rgba(208,59,59,0.16);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--plano); color: var(--tinta);
+    font-family: var(--sans); font-size: 15px; line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+  }
+  .envoltura { max-width: 1120px; margin: 0 auto; padding: 20px 16px 64px; }
+
+  /* ---------- cabecera ---------- */
+  header.top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px; margin-bottom: 20px; }
+  h1 { font-size: 19px; font-weight: 650; letter-spacing: -.01em; margin: 0; }
+  .frescura { font-size: 13px; color: var(--tinta-3); font-variant-numeric: tabular-nums; }
+  .frescura.viejo { color: var(--critico); font-weight: 600; }
+  .pulso { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--bueno); margin-right: 6px; vertical-align: middle; }
+  .pulso.viejo { background: var(--critico); }
+  @media (prefers-reduced-motion: no-preference) {
+    .pulso { animation: latido 2.4s ease-in-out infinite; }
+    @keyframes latido { 0%,100% { opacity: 1 } 50% { opacity: .35 } }
+  }
+
+  /* ---------- avisos ---------- */
+  .avisos { display: grid; gap: 8px; margin-bottom: 20px; }
+  .aviso {
+    display: flex; gap: 10px; align-items: flex-start;
+    padding: 11px 14px; border-radius: 9px; font-size: 14px;
+    border: 1px solid var(--borde);
+  }
+  .aviso.critico { background: var(--critico-fondo); border-color: rgba(208,59,59,.35); }
+  .aviso.aviso-n { background: var(--aviso-fondo); border-color: rgba(250,178,25,.4); }
+  .aviso.bueno   { background: var(--bueno-fondo); border-color: rgba(12,163,12,.3); }
+  .aviso .icono { flex: 0 0 auto; font-weight: 700; }
+  .aviso b { font-weight: 650; }
+
+  /* ---------- tiles ---------- */
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 10px; margin-bottom: 20px; }
+  .tile {
+    background: var(--tarjeta); border: 1px solid var(--borde);
+    border-radius: 11px; padding: 14px 16px;
+  }
+  .tile .etq { font-size: 11.5px; text-transform: uppercase; letter-spacing: .07em; color: var(--tinta-3); font-weight: 600; }
+  .tile .val { font-size: 30px; font-weight: 660; letter-spacing: -.02em; line-height: 1.15; margin-top: 4px; }
+  .tile .val .u { font-size: 15px; font-weight: 550; color: var(--tinta-2); margin-left: 3px; letter-spacing: 0; }
+  .tile .sub { font-size: 12.5px; color: var(--tinta-3); margin-top: 2px; font-variant-numeric: tabular-nums; }
+
+  /* ---------- grafica ---------- */
+  .panel {
+    background: var(--tarjeta); border: 1px solid var(--borde);
+    border-radius: 11px; padding: 16px; margin-bottom: 20px;
+  }
+  .panel h2 { font-size: 13px; font-weight: 650; margin: 0 0 2px; letter-spacing: -.005em; }
+  .panel .sub { font-size: 12.5px; color: var(--tinta-3); margin: 0 0 12px; }
+  .grafica-caja { position: relative; }
+  svg.grafica { display: block; width: 100%; height: 176px; overflow: visible; }
+  .tooltip {
+    position: absolute; pointer-events: none; opacity: 0; transition: opacity .12s;
+    background: var(--tarjeta); border: 1px solid var(--borde);
+    box-shadow: 0 4px 16px rgba(0,0,0,.14);
+    border-radius: 8px; padding: 7px 10px; font-size: 12.5px;
+    font-variant-numeric: tabular-nums; white-space: nowrap; z-index: 5;
+  }
+  .tooltip b { font-size: 14px; }
+  .tooltip .t { color: var(--tinta-3); display: block; font-size: 11.5px; }
+
+  /* ---------- mineros ---------- */
+  .rejilla { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 10px; }
+  .minero {
+    background: var(--tarjeta); border: 1px solid var(--borde);
+    border-radius: 11px; overflow: hidden;
+  }
+  .minero.critico { border-color: rgba(208,59,59,.4); }
+  .minero.parcial { border-color: rgba(250,178,25,.45); }
+  .m-cab { display: flex; align-items: center; gap: 10px; padding: 13px 15px 11px; }
+  .punto { flex: 0 0 auto; width: 9px; height: 9px; border-radius: 50%; }
+  .punto.ok { background: var(--bueno); }
+  .punto.parcial { background: var(--aviso); }
+  .punto.critico { background: var(--critico); }
+  .punto.apagado { background: var(--tinta-3); }
+  .m-nombre { font-weight: 640; font-size: 15px; }
+  .m-host { font-size: 11.5px; color: var(--tinta-3); font-weight: 400; }
+  .m-th { margin-left: auto; font-size: 19px; font-weight: 650; font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+  .m-th .u { font-size: 12px; font-weight: 500; color: var(--tinta-3); margin-left: 2px; }
+
+  .m-barra { height: 5px; background: var(--elevado); margin: 0 15px 12px; border-radius: 3px; overflow: hidden; }
+  .m-barra i { display: block; height: 100%; background: var(--serie); border-radius: 3px; transition: width .4s ease; }
+
+  .m-datos { display: flex; gap: 14px; padding: 0 15px 12px; font-size: 12.5px; color: var(--tinta-2); flex-wrap: wrap; font-variant-numeric: tabular-nums; }
+  .m-datos span { display: inline-flex; align-items: center; gap: 4px; }
+  .m-datos .k { color: var(--tinta-3); }
+  .temp-ok { color: var(--tinta-2); }
+  .temp-alta { color: var(--serio); font-weight: 600; }
+  .temp-critica { color: var(--critico); font-weight: 700; }
+
+  .placas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 0 15px 14px; }
+  .placa {
+    border: 1px solid var(--borde); border-radius: 7px; padding: 7px 8px;
+    font-size: 11.5px; background: var(--plano); font-variant-numeric: tabular-nums;
+  }
+  .placa .n { color: var(--tinta-3); font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
+  .placa .h { font-weight: 640; font-size: 13px; margin-top: 1px; }
+  .placa .d { color: var(--tinta-3); font-size: 11px; }
+  .placa.minando { border-left: 3px solid var(--bueno); }
+  .placa.sin_producir { border-left: 3px solid var(--aviso); }
+  .placa.sin_corriente { border-left: 3px solid var(--critico); }
+  .placa.ausente { border-left: 3px solid var(--eje); opacity: .6; }
+
+  footer { margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--borde); font-size: 12px; color: var(--tinta-3); }
+  a { color: var(--serie); }
+  .vacio { text-align: center; padding: 44px 20px; color: var(--tinta-3); }
+</style>
+</head>
+<body>
+<div class="envoltura">
+
+  <header class="top">
+    <h1>Flota Altairss</h1>
+    <div class="frescura" id="frescura"><span class="pulso"></span>cargando…</div>
+  </header>
+
+  <div class="avisos" id="avisos"></div>
+  <div class="tiles" id="tiles"></div>
+
+  <section class="panel">
+    <h2>Hashrate de la flota</h2>
+    <p class="sub" id="sub-grafica">últimas 24 horas</p>
+    <div class="grafica-caja" id="caja">
+      <svg class="grafica" id="grafica" role="img" aria-label="Hashrate total a lo largo del tiempo"></svg>
+      <div class="tooltip" id="tt"></div>
+    </div>
+  </section>
+
+  <div class="rejilla" id="mineros"></div>
+
+  <footer>
+    Los datos los recoge un equipo en local y se publican aquí cada pocos minutos.
+    Si la hora de arriba se queda atrás, ese equipo está apagado.
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var REFRESCO_MS = 30000;
+  var VIEJO_MIN = 10;
+
+  var $ = function (id) { return document.getElementById(id); };
+  var ne = function (n, d) { d = d === undefined ? 1 : d; return Number(n || 0).toFixed(d); };
+
+  function hace(seg) {
+    if (seg < 60) return "hace " + Math.round(seg) + " s";
+    var m = Math.round(seg / 60);
+    if (m < 60) return "hace " + m + " min";
+    var h = Math.floor(m / 60);
+    return "hace " + h + " h " + (m % 60) + " min";
+  }
+  function duracion(seg) {
+    var h = Math.floor(seg / 3600), m = Math.floor((seg % 3600) / 60);
+    if (h > 0) return h + " h " + m + " min";
+    return m + " min";
+  }
+  function claseTemp(t) {
+    if (!t) return "temp-ok";
+    if (t >= 95) return "temp-critica";
+    if (t >= 90) return "temp-alta";
+    return "temp-ok";
+  }
+
+  // ---------- avisos ----------
+  function pintaAvisos(d) {
+    var c = $("avisos"); c.innerHTML = "";
+    var lista = d.alertas || [];
+    if (!lista.length) return;
+    lista.slice(0, 8).forEach(function (a) {
+      var cls = a.nivel === "critico" ? "critico" : (a.nivel === "bueno" ? "bueno" : "aviso-n");
+      var ico = a.nivel === "critico" ? "!" : (a.nivel === "bueno" ? "✓" : "⚠");
+      var el = document.createElement("div");
+      el.className = "aviso " + cls;
+      el.innerHTML = '<span class="icono">' + ico + '</span><span><b>' +
+        escapa(a.minero) + "</b> — " + escapa(a.texto) + "</span>";
+      c.appendChild(el);
+    });
+  }
+  function escapa(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (m) {
+      return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[m];
+    });
+  }
+
+  // ---------- tiles ----------
+  function pintaTiles(d) {
+    var t = d.total, c = $("tiles");
+    var items = [
+      { etq: "Hashrate", val: ne(t.hashrate, 2), u: "TH/s", sub: t.jth > 0 ? ne(t.jth, 1) + " J/TH" : "&nbsp;" },
+      { etq: "Consumo", val: ne(t.kw, 2), u: "kW", sub: t.vatios + " W" },
+      { etq: "Mineros", val: t.minerosOnline, u: "/ " + t.minerosTotal, sub: (t.minerosTotal - t.minerosOnline) + " sin responder" },
+      { etq: "Placas", val: t.placasOk, u: "/ " + t.placasTotal, sub: (t.placasTotal - t.placasOk) + " paradas" }
+    ];
+    c.innerHTML = items.map(function (i) {
+      return '<div class="tile"><div class="etq">' + i.etq + '</div>' +
+        '<div class="val">' + i.val + '<span class="u">' + i.u + "</span></div>" +
+        '<div class="sub">' + i.sub + "</div></div>";
+    }).join("");
+  }
+
+  // ---------- grafica ----------
+  var datosGraf = [];
+  function pintaGrafica(d) {
+    var h = (d.historial || []).filter(function (p) { return p && p.t; });
+    datosGraf = h;
+    var svg = $("grafica");
+    svg.innerHTML = "";
+    if (h.length < 2) {
+      $("sub-grafica").textContent = "aún no hay suficientes datos para la gráfica";
+      return;
+    }
+    var horas = (h[h.length - 1].t - h[0].t) / 3600;
+    $("sub-grafica").textContent = horas >= 1
+      ? "últimas " + Math.round(horas) + " horas"
+      : "últimos " + Math.round(horas * 60) + " minutos";
+
+    var W = svg.clientWidth || 700, H = 176;
+    var mL = 44, mR = 8, mT = 10, mB = 22;
+    var pw = W - mL - mR, ph = H - mT - mB;
+
+    var max = Math.max.apply(null, h.map(function (p) { return p.th; }));
+    max = max <= 0 ? 10 : max * 1.12;
+
+    var t0 = h[0].t, t1 = h[h.length - 1].t;
+    var span = Math.max(1, t1 - t0);
+    var X = function (t) { return mL + ((t - t0) / span) * pw; };
+    var Y = function (v) { return mT + ph - (v / max) * ph; };
+
+    var NS = "http://www.w3.org/2000/svg";
+    function el(n, a) { var e = document.createElementNS(NS, n); for (var k in a) e.setAttribute(k, a[k]); return e; }
+
+    // rejilla + eje Y
+    var pasos = 4;
+    for (var i = 0; i <= pasos; i++) {
+      var v = (max / pasos) * i, y = Y(v);
+      svg.appendChild(el("line", { x1: mL, y1: y, x2: mL + pw, y2: y, stroke: "var(--rejilla)", "stroke-width": 1 }));
+      var tx = el("text", { x: mL - 8, y: y + 3.5, "text-anchor": "end", fill: "var(--tinta-3)", "font-size": 10.5, "font-family": "var(--sans)" });
+      tx.textContent = v.toFixed(0);
+      svg.appendChild(tx);
+    }
+    var un = el("text", { x: mL - 8, y: mT - 1, "text-anchor": "end", fill: "var(--tinta-3)", "font-size": 9.5, "font-family": "var(--sans)" });
+    un.textContent = "TH/s"; svg.appendChild(un);
+
+    // area + linea
+    var dLinea = "", dArea = "";
+    h.forEach(function (p, i) {
+      var x = X(p.t), y = Y(p.th);
+      dLinea += (i ? "L" : "M") + x.toFixed(1) + " " + y.toFixed(1) + " ";
+    });
+    dArea = dLinea + "L" + X(t1).toFixed(1) + " " + Y(0).toFixed(1) + " L" + X(t0).toFixed(1) + " " + Y(0).toFixed(1) + " Z";
+    svg.appendChild(el("path", { d: dArea, fill: "var(--serie-suave)" }));
+    svg.appendChild(el("path", { d: dLinea, fill: "none", stroke: "var(--serie)", "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" }));
+
+    // punto final destacado
+    var ult = h[h.length - 1];
+    svg.appendChild(el("circle", { cx: X(ult.t), cy: Y(ult.th), r: 4, fill: "var(--serie)", stroke: "var(--tarjeta)", "stroke-width": 2 }));
+
+    // eje X
+    svg.appendChild(el("line", { x1: mL, y1: mT + ph, x2: mL + pw, y2: mT + ph, stroke: "var(--eje)", "stroke-width": 1 }));
+    [0, 0.5, 1].forEach(function (f) {
+      var t = t0 + span * f;
+      var e = el("text", { x: X(t), y: H - 5, "text-anchor": f === 0 ? "start" : (f === 1 ? "end" : "middle"), fill: "var(--tinta-3)", "font-size": 10.5, "font-family": "var(--sans)" });
+      e.textContent = new Date(t * 1000).toLocaleTimeString("es", { hour: "2-digit", minute: "2-digit" });
+      svg.appendChild(e);
+    });
+
+    // hover
+    var cruz = el("line", { x1: 0, y1: mT, x2: 0, y2: mT + ph, stroke: "var(--tinta-3)", "stroke-width": 1, "stroke-dasharray": "3 3", opacity: 0 });
+    var marca = el("circle", { r: 4.5, fill: "var(--serie)", stroke: "var(--tarjeta)", "stroke-width": 2, opacity: 0 });
+    svg.appendChild(cruz); svg.appendChild(marca);
+    var cap = el("rect", { x: mL, y: mT, width: pw, height: ph, fill: "transparent" });
+    svg.appendChild(cap);
+
+    var tt = $("tt"), caja = $("caja");
+    function mueve(ev) {
+      var r = svg.getBoundingClientRect();
+      var cx = (ev.touches ? ev.touches[0].clientX : ev.clientX) - r.left;
+      var mejor = null, dist = 1e9;
+      h.forEach(function (p) { var dd = Math.abs(X(p.t) - cx); if (dd < dist) { dist = dd; mejor = p; } });
+      if (!mejor) return;
+      var x = X(mejor.t), y = Y(mejor.th);
+      cruz.setAttribute("x1", x); cruz.setAttribute("x2", x); cruz.setAttribute("opacity", 1);
+      marca.setAttribute("cx", x); marca.setAttribute("cy", y); marca.setAttribute("opacity", 1);
+      tt.innerHTML = "<b>" + mejor.th.toFixed(2) + " TH/s</b> &nbsp;" + mejor.w + " W" +
+        '<span class="t">' + new Date(mejor.t * 1000).toLocaleString("es", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) +
+        " &middot; " + mejor.m + " mineros</span>";
+      tt.style.opacity = 1;
+      var tw = tt.offsetWidth, bw = caja.clientWidth;
+      var px = Math.min(Math.max(x - tw / 2, 0), bw - tw);
+      tt.style.left = px + "px";
+      tt.style.top = Math.max(0, y - tt.offsetHeight - 12) + "px";
+    }
+    function sale() { tt.style.opacity = 0; cruz.setAttribute("opacity", 0); marca.setAttribute("opacity", 0); }
+    cap.addEventListener("mousemove", mueve);
+    cap.addEventListener("mouseleave", sale);
+    cap.addEventListener("touchstart", mueve, { passive: true });
+    cap.addEventListener("touchmove", mueve, { passive: true });
+    cap.addEventListener("touchend", sale);
+  }
+
+  // ---------- mineros ----------
+  function pintaMineros(d) {
+    var c = $("mineros");
+    var maxTh = 13;
+    c.innerHTML = (d.mineros || []).map(function (m) {
+      var estado = m.online ? m.estado : "apagado";
+      var pct = Math.min(100, (m.hashrate / maxTh) * 100);
+      var placas = (m.placas || []).map(function (p) {
+        var txt, det;
+        if (p.estado === "minando") { txt = ne(p.hashrate, 2) + " TH/s"; det = p.chips + " chips &middot; " + p.vatios + " W"; }
+        else if (p.estado === "sin_producir") { txt = "sin producir"; det = p.vatios + " W"; }
+        else if (p.estado === "sin_corriente") { txt = "sin corriente"; det = "0 W"; }
+        else { txt = "no conectada"; det = "&nbsp;"; }
+        var tp = p.temp > 0 ? ' &middot; <span class="' + claseTemp(p.temp) + '">' + ne(p.temp, 0) + "°</span>" : "";
+        return '<div class="placa ' + p.estado + '"><div class="n">Placa ' + p.id + '</div>' +
+          '<div class="h">' + txt + '</div><div class="d">' + det + tp + "</div></div>";
+      }).join("");
+
+      var vent = (m.ventiladores && m.ventiladores.length)
+        ? m.ventiladores.join(" / ") + " rpm" : "—";
+
+      return '<article class="minero ' + estado + '">' +
+        '<div class="m-cab"><span class="punto ' + estado + '"></span>' +
+        '<span><span class="m-nombre">' + escapa(m.nombre) + "</span><br>" +
+        '<span class="m-host">' + escapa(m.host) + " · " + escapa(m.ip) + "</span></span>" +
+        '<span class="m-th">' + (m.online ? ne(m.hashrate, 2) : "—") +
+        '<span class="u">' + (m.online ? "TH/s" : "apagado") + "</span></span></div>" +
+        '<div class="m-barra"><i style="width:' + (m.online ? pct : 0) + '%"></i></div>' +
+        '<div class="m-datos">' +
+        "<span><span class='k'>placas</span> " + m.placasOk + "/3</span>" +
+        "<span><span class='k'>vatios</span> " + m.vatios + "</span>" +
+        "<span><span class='k'>temp</span> <span class='" + claseTemp(m.tempMax) + "'>" + (m.tempMax > 0 ? ne(m.tempMax, 0) + "°" : "—") + "</span></span>" +
+        "<span><span class='k'>vent</span> " + vent + "</span>" +
+        "<span><span class='k'>enc</span> " + (m.online ? duracion(m.uptimeSeg) : "—") + "</span>" +
+        "</div><div class='placas'>" + placas + "</div></article>";
+    }).join("");
+  }
+
+  // ---------- frescura ----------
+  var ultUnix = 0;
+  function pintaFrescura() {
+    if (!ultUnix) return;
+    var seg = Math.max(0, Math.floor(Date.now() / 1000) - ultUnix);
+    var viejo = seg > VIEJO_MIN * 60;
+    var f = $("frescura");
+    f.className = "frescura" + (viejo ? " viejo" : "");
+    f.innerHTML = '<span class="pulso' + (viejo ? " viejo" : "") + '"></span>' +
+      (viejo ? "sin actualizar " + hace(seg) : "actualizado " + hace(seg));
+  }
+
+  // ---------- carga ----------
+  function carga() {
+    fetch("datos.json?t=" + Date.now(), { cache: "no-store" })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (d) {
+        ultUnix = d.actualizadoUnix || 0;
+        pintaFrescura();
+        pintaAvisos(d);
+        pintaTiles(d);
+        pintaGrafica(d);
+        pintaMineros(d);
+      })
+      .catch(function () {
+        $("frescura").innerHTML = '<span class="pulso viejo"></span>no se pudieron cargar los datos';
+        $("frescura").className = "frescura viejo";
+      });
+  }
+
+  carga();
+  setInterval(carga, REFRESCO_MS);
+  setInterval(pintaFrescura, 1000);
+  var rt;
+  window.addEventListener("resize", function () {
+    clearTimeout(rt);
+    rt = setTimeout(function () { if (datosGraf.length) pintaGrafica({ historial: datosGraf }); }, 200);
+  });
+})();
+</script>
+</body>
+</html>

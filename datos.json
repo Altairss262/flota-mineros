@@ -1,0 +1,241 @@
+﻿{
+    "actualizado":  "2026-08-27T18:54:06-04:00",
+    "actualizadoUnix":  1787871246,
+    "total":  {
+                  "hashrate":  0,
+                  "vatios":  0,
+                  "kw":  0,
+                  "minerosOnline":  0,
+                  "minerosTotal":  8,
+                  "placasOk":  0,
+                  "placasTotal":  24,
+                  "jth":  0
+              },
+    "mineros":  [
+                    {
+                        "nombre":  "kiwi01",
+                        "host":  "Gabriel01",
+                        "ip":  "192.168.0.138",
+                        "online":  false,
+                        "hashrate":  0,
+                        "vatios":  0,
+                        "limite":  0,
+                        "uptimeSeg":  0,
+                        "aceptadas":  0,
+                        "rechazadas":  0,
+                        "placasOk":  0,
+                        "placasVistas":  0,
+                        "tempMax":  0,
+                        "ventiladores":  [
+
+                                         ],
+                        "ventPct":  0,
+                        "estado":  "apagado",
+                        "avisos":  [
+
+                                   ],
+                        "placas":  [
+
+                                   ]
+                    },
+                    {
+                        "nombre":  "kiwi02",
+                        "host":  "Gabriel02",
+                        "ip":  "192.168.0.237",
+                        "online":  false,
+                        "hashrate":  0,
+                        "vatios":  0,
+                        "limite":  0,
+                        "uptimeSeg":  0,
+                        "aceptadas":  0,
+                        "rechazadas":  0,
+                        "placasOk":  0,
+                        "placasVistas":  0,
+                        "tempMax":  0,
+                        "ventiladores":  [
+
+                                         ],
+                        "ventPct":  0,
+                        "estado":  "apagado",
+                        "avisos":  [
+
+                                   ],
+                        "placas":  [
+
+                                   ]
+                    },
+                    {
+                        "nombre":  "kiwi03",
+                        "host":  "Gabriel03",
+                        "ip":  "192.168.0.176",
+                        "online":  false,
+                        "hashrate":  0,
+                        "vatios":  0,
+                        "limite":  0,
+                        "uptimeSeg":  0,
+                        "aceptadas":  0,
+                        "rechazadas":  0,
+                        "placasOk":  0,
+                        "placasVistas":  0,
+                        "tempMax":  0,
+                        "ventiladores":  [
+
+                                         ],
+                        "ventPct":  0,
+                        "estado":  "apagado",
+                        "avisos":  [
+
+                                   ],
+                        "placas":  [
+
+                                   ]
+                    },
+                    {
+                        "nombre":  "kiwi04",
+                        "host":  "Gabriel00",
+                        "ip":  "192.168.0.165",
+                        "online":  false,
+                        "hashrate":  0,
+                        "vatios":  0,
+                        "limite":  0,
+                        "uptimeSeg":  0,
+                        "aceptadas":  0,
+                        "rechazadas":  0,
+                        "placasOk":  0,
+                        "placasVistas":  0,
+                        "tempMax":  0,
+                        "ventiladores":  [
+
+                                         ],
+                        "ventPct":  0,
+                        "estado":  "apagado",
+                        "avisos":  [
+
+                                   ],
+                        "placas":  [
+
+                                   ]
+                    },
+                    {
+                        "nombre":  "Sara00",
+                        "host":  "Sara00",
+                        "ip":  "192.168.0.145",
+                        "online":  false,
+                        "hashrate":  0,
+                        "vatios":  0,
+                        "limite":  0,
+                        "uptimeSeg":  0,
+                        "aceptadas":  0,
+                        "rechazadas":  0,
+                        "placasOk":  0,
+                        "placasVistas":  0,
+                        "tempMax":  0,
+                        "ventiladores":  [
+
+                                         ],
+                        "ventPct":  0,
+                        "estado":  "apagado",
+                        "avisos":  [
+
+                                   ],
+                        "placas":  [
+
+                                   ]
+                    },
+                    {
+                        "nombre":  "Sara02",
+                        "host":  "Sara02",
+                        "ip":  "192.168.0.200",
+                        "online":  false,
+                        "hashrate":  0,
+                        "vatios":  0,
+                        "limite":  0,
+                        "uptimeSeg":  0,
+                        "aceptadas":  0,
+                        "rechazadas":  0,
+                        "placasOk":  0,
+                        "placasVistas":  0,
+                        "tempMax":  0,
+                        "ventiladores":  [
+
+                                         ],
+                        "ventPct":  0,
+                        "estado":  "apagado",
+                        "avisos":  [
+
+                                   ],
+                        "placas":  [
+
+                                   ]
+                    },
+                    {
+                        "nombre":  "Sara03",
+                        "host":  "Sara03",
+                        "ip":  "192.168.0.195",
+                        "online":  false,
+                        "hashrate":  0,
+                        "vatios":  0,
+                        "limite":  0,
+                        "uptimeSeg":  0,
+                        "aceptadas":  0,
+                        "rechazadas":  0,
+                        "placasOk":  0,
+                        "placasVistas":  0,
+                        "tempMax":  0,
+                        "ventiladores":  [
+
+                                         ],
+                        "ventPct":  0,
+                        "estado":  "apagado",
+                        "avisos":  [
+
+                                   ],
+                        "placas":  [
+
+                                   ]
+                    },
+                    {
+                        "nombre":  "Sara04",
+                        "host":  "Sara04",
+                        "ip":  "192.168.0.235",
+                        "online":  false,
+                        "hashrate":  0,
+                        "vatios":  0,
+                        "limite":  0,
+                        "uptimeSeg":  0,
+                        "aceptadas":  0,
+                        "rechazadas":  0,
+                        "placasOk":  0,
+                        "placasVistas":  0,
+                        "tempMax":  0,
+                        "ventiladores":  [
+
+                                         ],
+                        "ventPct":  0,
+                        "estado":  "apagado",
+                        "avisos":  [
+
+                                   ],
+                        "placas":  [
+
+                                   ]
+                    }
+                ],
+    "alertas":  [
+
+                ],
+    "historial":  [
+                      {
+                          "t":  1787871057,
+                          "th":  0,
+                          "w":  0,
+                          "m":  0
+                      },
+                      {
+                          "t":  1787871246,
+                          "th":  0,
+                          "w":  0,
+                          "m":  0
+                      }
+                  ]
+}

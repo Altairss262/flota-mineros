@@ -1,10 +1,15 @@
-﻿# Nunca subir credenciales
+# CREDENCIALES - nunca subir
+correo.local.json
+*.local.json
 *.password
 *.secret
 credenciales*
-config-local*
 
-# Ficheros temporales
+# Estado interno del recolector
+.estado-anterior.json
+.ultimo-correo.txt
+
+# Temporales
 *.tmp
 *.bak
 Thumbs.db
