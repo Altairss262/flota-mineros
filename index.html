@@ -222,6 +222,32 @@
   .btn.principal { background: var(--serie); border-color: var(--serie); color: #fff; }
   .btn.principal:hover { filter: brightness(1.08); }
 
+  /* ---------- contacto ---------- */
+  .form-fila { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  @media (max-width: 560px) { .form-fila { grid-template-columns: 1fr; } }
+  .campo { display: block; }
+  .campo span {
+    display: block; font-size: 11.5px; font-weight: 600; color: var(--tinta-3);
+    text-transform: uppercase; letter-spacing: .06em; margin-bottom: 5px;
+  }
+  .campo input, .campo textarea {
+    width: 100%; font: inherit; font-size: 14px;
+    background: var(--plano); color: var(--tinta);
+    border: 1px solid var(--borde); border-radius: 8px;
+    padding: 9px 11px; transition: border-color .15s;
+  }
+  .campo textarea { min-height: 104px; resize: vertical; line-height: 1.5; }
+  .campo input:focus, .campo textarea:focus {
+    outline: none; border-color: var(--serie);
+  }
+  .campo input::placeholder, .campo textarea::placeholder { color: var(--tinta-3); }
+  .form-pie { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
+  .form-msg { font-size: 13.5px; }
+  .form-msg.ok { color: var(--bueno); font-weight: 600; }
+  .form-msg.mal { color: var(--critico); font-weight: 600; }
+  .oculto { position: absolute; left: -9999px; opacity: 0; height: 0; width: 0; }
+  #enviar[disabled] { opacity: .55; cursor: default; }
+
   footer { margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--borde); font-size: 12px; color: var(--tinta-3); }
   a { color: var(--serie); }
   .vacio { text-align: center; padding: 44px 20px; color: var(--tinta-3); }
@@ -259,6 +285,35 @@
     <div class="sel-lista" id="selector"></div>
     <div id="pendiente"></div>
     <p class="sel-nota" id="sel-nota"></p>
+  </section>
+
+  <section class="panel" id="panel-contacto" style="margin-top:20px">
+    <h2>Contacto</h2>
+    <p class="sub">¿Una duda sobre el montaje, o quieres que te ayude con el tuyo? Escríbeme.</p>
+
+    <form id="form-contacto" novalidate>
+      <div class="form-fila">
+        <label class="campo">
+          <span>Nombre</span>
+          <input type="text" name="name" required autocomplete="name" placeholder="Cómo te llamas">
+        </label>
+        <label class="campo">
+          <span>Correo</span>
+          <input type="email" name="email" required autocomplete="email" placeholder="para poder responderte">
+        </label>
+      </div>
+      <label class="campo">
+        <span>Mensaje</span>
+        <textarea name="message" required placeholder="Cuéntame"></textarea>
+      </label>
+
+      <input type="checkbox" name="botcheck" class="oculto" tabindex="-1" autocomplete="off">
+
+      <div class="form-pie">
+        <button type="submit" class="btn principal" id="enviar">Enviar</button>
+        <span class="form-msg" id="form-msg" role="status" aria-live="polite"></span>
+      </div>
+    </form>
   </section>
 
   <footer>
@@ -619,6 +674,71 @@
         $("frescura").className = "frescura viejo";
       });
   }
+
+  // ---------- contacto ----------
+  (function () {
+    var CLAVE = "921c06ff-5462-4330-969f-177f8baf9d0a";
+    var form = $("form-contacto");
+    if (!form) return;
+    var btn = $("enviar"), msg = $("form-msg");
+
+    form.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      msg.className = "form-msg"; msg.textContent = "";
+
+      var d = new FormData(form);
+      var nombre = (d.get("name") || "").toString().trim();
+      var correo = (d.get("email") || "").toString().trim();
+      var texto = (d.get("message") || "").toString().trim();
+
+      if (!nombre || !correo || !texto) {
+        msg.className = "form-msg mal"; msg.textContent = "Rellena los tres campos.";
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
+        msg.className = "form-msg mal"; msg.textContent = "Ese correo no parece v\u00e1lido.";
+        return;
+      }
+      if (d.get("botcheck")) { return; }
+
+      btn.disabled = true;
+      var textoBtn = btn.textContent;
+      btn.textContent = "Enviando\u2026";
+
+      fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({
+          access_key: CLAVE,
+          subject: "Mensaje desde el dashboard de mineros",
+          from_name: "Flota Altairss",
+          name: nombre,
+          email: correo,
+          message: texto
+        })
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (r) {
+          if (r && r.success) {
+            form.reset();
+            msg.className = "form-msg ok";
+            msg.textContent = "Mensaje enviado. Gracias.";
+          } else {
+            msg.className = "form-msg mal";
+            msg.textContent = "No se pudo enviar. Int\u00e9ntalo en un momento.";
+          }
+        })
+        .catch(function () {
+          msg.className = "form-msg mal";
+          msg.textContent = "No se pudo enviar. Revisa tu conexi\u00f3n.";
+        })
+        .then(function () {
+          btn.disabled = false;
+          btn.textContent = textoBtn;
+          setTimeout(function () { msg.textContent = ""; msg.className = "form-msg"; }, 7000);
+        });
+    });
+  })();
 
   carga();
   setInterval(carga, REFRESCO_MS);
