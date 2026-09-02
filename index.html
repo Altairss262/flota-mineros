@@ -147,6 +147,24 @@
   .m-datos { display: flex; gap: 14px; padding: 0 15px 12px; font-size: 12.5px; color: var(--tinta-2); flex-wrap: wrap; font-variant-numeric: tabular-nums; }
   .m-datos span { display: inline-flex; align-items: center; gap: 4px; }
   .m-datos .k { color: var(--tinta-3); }
+  /* --- velocimetros de ventiladores --- */
+  .vents { display: flex; gap: 10px; padding: 0 15px 12px; align-items: flex-start; }
+  .vent { text-align: center; flex: 0 0 auto; }
+  .vent svg { display: block; }
+  .vent .rpm {
+    font-size: 12px; font-weight: 700; color: var(--tinta);
+    font-variant-numeric: tabular-nums; line-height: 1.1; margin-top: -6px;
+  }
+  .vent .et { font-size: 10px; color: var(--tinta-3); letter-spacing: .02em; }
+  .vent.parado .rpm { color: var(--critico); }
+  .vent.bajo   .rpm { color: var(--aviso); }
+  .vent-nota {
+    align-self: center; font-size: 11px; line-height: 1.35; padding: 5px 8px;
+    border-radius: 6px; border: 1px solid var(--borde);
+  }
+  .vent-nota.desig { background: var(--aviso-fondo); color: var(--serio); font-weight: 600; }
+  .vent-nota.mal   { background: var(--critico-fondo); color: var(--critico); font-weight: 700; }
+
   .temp-ok { color: var(--tinta-2); }
   .temp-alta { color: var(--serio); font-weight: 600; }
   .temp-critica { color: var(--critico); font-weight: 700; }
@@ -489,6 +507,80 @@
     cap.addEventListener("touchend", sale);
   }
 
+  // ---------- velocimetro de ventilador ----------
+  var RPM_MAX = 6500;
+
+  function ptoArco(cx, cy, r, deg) {
+    var a = deg * Math.PI / 180;
+    return [cx + r * Math.cos(a), cy - r * Math.sin(a)];
+  }
+  function arco(cx, cy, r, d1, d2) {
+    var a = ptoArco(cx, cy, r, d1), b = ptoArco(cx, cy, r, d2);
+    return "M" + a[0].toFixed(1) + " " + a[1].toFixed(1) +
+           "A" + r + " " + r + " 0 0 1 " + b[0].toFixed(1) + " " + b[1].toFixed(1);
+  }
+
+  // Un S9 sano gira entre 3.000 y 6.000 rpm. Por debajo de 2.000 no refrigera.
+  function nivelVent(rpm) {
+    if (!rpm) return "parado";
+    if (rpm < 2000) return "parado";
+    if (rpm < 3000) return "bajo";
+    return "ok";
+  }
+
+  function velocimetro(rpm, idx) {
+    var cx = 30, cy = 30, r = 22;
+    var pct = Math.min(1, Math.max(0, (rpm || 0) / RPM_MAX));
+    var ang = 180 - pct * 180;
+    var niv = nivelVent(rpm);
+    var col = niv === "parado" ? "var(--critico)" : (niv === "bajo" ? "var(--aviso)" : "var(--bueno)");
+
+    // marcas cada 1.625 rpm
+    var ticks = "";
+    for (var i = 0; i <= 4; i++) {
+      var t = 180 - (i / 4) * 180;
+      var p1 = ptoArco(cx, cy, r - 5, t), p2 = ptoArco(cx, cy, r - 1, t);
+      ticks += '<line x1="' + p1[0].toFixed(1) + '" y1="' + p1[1].toFixed(1) +
+               '" x2="' + p2[0].toFixed(1) + '" y2="' + p2[1].toFixed(1) +
+               '" stroke="var(--eje)" stroke-width="1"/>';
+    }
+    var ag = ptoArco(cx, cy, r - 6, ang);
+
+    return '<div class="vent ' + (niv === "ok" ? "" : niv) + '">' +
+      '<svg width="60" height="38" viewBox="0 0 60 38" aria-hidden="true">' +
+      '<path d="' + arco(cx, cy, r, 180, 0) + '" fill="none" stroke="var(--rejilla)" stroke-width="5" stroke-linecap="round"/>' +
+      (pct > 0 ? '<path d="' + arco(cx, cy, r, 180, ang) + '" fill="none" stroke="' + col + '" stroke-width="5" stroke-linecap="round"/>' : '') +
+      ticks +
+      '<line x1="' + cx + '" y1="' + cy + '" x2="' + ag[0].toFixed(1) + '" y2="' + ag[1].toFixed(1) +
+      '" stroke="var(--tinta)" stroke-width="1.6" stroke-linecap="round"/>' +
+      '<circle cx="' + cx + '" cy="' + cy + '" r="2.4" fill="var(--tinta)"/>' +
+      '</svg>' +
+      '<div class="rpm">' + (rpm ? rpm.toLocaleString("es") : "0") + '</div>' +
+      '<div class="et">vent ' + idx + '</div>' +
+      '</div>';
+  }
+
+  function bloqueVents(m) {
+    var v = m.ventiladores || [];
+    if (!m.online || !v.length) return "";
+    var html = v.map(function (rpm, i) { return velocimetro(rpm, i + 1); }).join("");
+
+    // El desequilibrio entre los dos es la senal que delata un ventilador
+    // mal montado o agonizando, aunque ninguno este parado.
+    var nota = "";
+    var vivos = v.filter(function (x) { return x > 0; });
+    if (v.some(function (x) { return !x; })) {
+      nota = '<div class="vent-nota mal">Un ventilador parado.<br>No refrigera.</div>';
+    } else if (vivos.length > 1) {
+      var mn = Math.min.apply(null, vivos), mx = Math.max.apply(null, vivos);
+      if (mn / mx < 0.6) {
+        nota = '<div class="vent-nota desig">Desequilibrio ' +
+               Math.round((1 - mn / mx) * 100) + '%.<br>Revisa montaje y sentido.</div>';
+      }
+    }
+    return '<div class="vents">' + html + nota + '</div>';
+  }
+
   // ---------- mineros ----------
   function pintaMineros(d) {
     var c = $("mineros");
@@ -507,9 +599,6 @@
           '<div class="h">' + txt + '</div><div class="d">' + det + tp + "</div></div>";
       }).join("");
 
-      var vent = (m.ventiladores && m.ventiladores.length)
-        ? m.ventiladores.join(" / ") + " rpm" : "—";
-
       return '<article class="minero ' + estado + '">' +
         '<div class="m-cab"><span class="punto ' + estado + '"></span>' +
         '<span><span class="m-nombre">' + escapa(m.nombre) + "</span><br>" +
@@ -521,9 +610,9 @@
         "<span><span class='k'>placas</span> " + m.placasOk + "/3</span>" +
         "<span><span class='k'>vatios</span> " + m.vatios + "</span>" +
         "<span><span class='k'>temp</span> <span class='" + claseTemp(m.tempMax) + "'>" + (m.tempMax > 0 ? ne(m.tempMax, 0) + "°" : "—") + "</span></span>" +
-        "<span><span class='k'>vent</span> " + vent + "</span>" +
         "<span><span class='k'>enc</span> " + (m.online ? duracion(m.uptimeSeg) : "—") + "</span>" +
-        "</div><div class='placas'>" + placas + "</div></article>";
+        "</div>" + bloqueVents(m) +
+        "<div class='placas'>" + placas + "</div></article>";
     }).join("");
   }
 

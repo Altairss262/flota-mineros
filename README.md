@@ -9,7 +9,7 @@ Lee las máquinas en la red local, publica un dashboard web y avisa por correo c
 
 ## El problema
 
-Ocho S9 repartidos en una estantería, en un sitio con **cortes de luz de 5 a 7 horas diarias**
+Siete S9 repartidos en una estantería, en un sitio con **cortes de luz de 5 a 7 horas diarias**
 y sin aire acondicionado. Cada corte y cada arranque castiga fuentes y conectores.
 La flota pasó de 12 máquinas a 8 por desgaste.
 
@@ -193,12 +193,14 @@ Al montarlos conviene:
 ## Pendiente
 
 - [ ] **Conectores PCIe nuevos** — en camino. Rehacer las conexiones de toda la flota.
-- [ ] **kiwi04** — placas 7 y 8 sin corriente con los cables puestos. Probable fuente.
-      Prueba: pasarle a la placa 7 el cable de la placa 6, que sí funciona.
+- [x] **kiwi04** — desmantelada. Su placa buena pasó a Sara03, que vuelve a ir
+      con las tres. La máquina sale de la flota: quedan 7.
 - [ ] **Sara04** — verificar que el ventilador nuevo da las mismas vueltas que el otro
       (el viejo iba a 2.280 rpm contra 5.940 del compañero).
-- [ ] **Sara00** — placa 6 con ~32.000 interferencias: conector de la placa desgastado.
-      Es la única que justificaría desmontar para cambiar el conector.
+- [ ] **Sara00** — cadena 7 a 0 W y 0 chips con las otras dos a 375 W sobre la misma
+      fuente: el fallo es del cable PCIe o del conector de ese slot, no de la fuente.
+      Es el slot donde estaba la placa que hacía corto. La placa 6 arranca con 61
+      chips de 63: conector desgastado, sigue pendiente de cambiar.
 - [ ] Pasar el recolector a un dispositivo siempre encendido (un móvil con Termux
       o una Raspberry) para no depender del PC.
 

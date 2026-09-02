@@ -4,6 +4,11 @@ correo.local.json
 *.password
 *.secret
 credenciales*
+credentials*
+*credentials*
+*.credentials.json
+claude-code-credentials*
+*token*.json
 
 # Estado interno del recolector
 .estado-anterior.json

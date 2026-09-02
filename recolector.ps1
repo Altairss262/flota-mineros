@@ -25,10 +25,9 @@ $RAIZ = Split-Path -Parent $MyInvocation.MyCommand.Path
 # ============================================================
 
 $MINEROS = @(
-    @{ Nombre = "kiwi01"; Host = "Gabriel01"; IP = "192.168.0.138" }
+    @{ Nombre = "kiwi01"; Host = "Gabriel01"; IP = "192.168.0.137" }
     @{ Nombre = "kiwi02"; Host = "Gabriel02"; IP = "192.168.0.237" }
     @{ Nombre = "kiwi03"; Host = "Gabriel03"; IP = "192.168.0.176" }
-    @{ Nombre = "kiwi04"; Host = "Gabriel00"; IP = "192.168.0.165" }
     @{ Nombre = "Sara00"; Host = "Sara00";    IP = "192.168.0.145" }
     @{ Nombre = "Sara02"; Host = "Sara02";    IP = "192.168.0.200" }
     @{ Nombre = "Sara03"; Host = "Sara03";    IP = "192.168.0.195" }
@@ -130,9 +129,15 @@ $lecturas = @()
 foreach ($m in $MINEROS) { $lecturas += Leer-Minero $m }
 
 $online  = @($lecturas | Where-Object { $_.online })
-$totalTh = [math]::Round((($online | Measure-Object hashrate -Sum).Sum), 2)
-$totalW  = [int](($online | Measure-Object vatios -Sum).Sum)
-$totalOk = [int](($online | Measure-Object placasOk -Sum).Sum)
+# Los mineros son hashtables ordenados: Measure-Object -Property no ve sus
+# claves y devolvia 0. Se suman a mano.
+$totalTh = 0.0; $totalW = 0; $totalOk = 0
+foreach ($o in $online) {
+    $totalTh += [double]$o.hashrate
+    $totalW  += [int]$o.vatios
+    $totalOk += [int]$o.placasOk
+}
+$totalTh = [math]::Round($totalTh, 2)
 $jth = 0; if ($totalTh -gt 0) { $jth = [math]::Round($totalW / $totalTh, 1) }
 $ahora = Get-Date
 $unix  = [int][double]::Parse((Get-Date -Date $ahora.ToUniversalTime() -UFormat %s))
