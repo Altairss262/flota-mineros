@@ -117,6 +117,7 @@ El diseño en serie es lo que hace eficiente a la máquina: en paralelo harían 
 | `recolector.ps1` | Lee los mineros, genera los datos, avisa y sube |
 | `alertas.config.json` | Selector de avisos — editable desde GitHub |
 | `programar-actualizacion.ps1` | Instala la tarea programada |
+| `VIGILAR.bat` / `VIGILAR.ps1` | Vigilancia en vivo en la terminal, se queda abierta |
 | `ENCENDER.bat` / `APAGAR.bat` | Encender y apagar el monitor, sin consola |
 | `datos.json` | Estado actual (lo genera el recolector) |
 | `historial.json` | 24 horas de hashrate para la gráfica |
@@ -146,6 +147,26 @@ git push -u origin main
 
 Para los avisos por correo: copiar la plantilla de `correo.local.json`, poner una
 cuenta de Gmail con clave de aplicación, y cambiar `activado` a `true`.
+
+---
+
+## Dos formas de vigilar
+
+Funcionan a la vez y no se estorban.
+
+**En segundo plano.** `ENCENDER.bat` programa una tarea de Windows que cada 2
+minutos lee la flota, publica el dashboard y avisa por correo. Se relanza sola
+al encender el PC, así que sobrevive a los apagones. Para comprobar que sigue
+viva: `.\programar-actualizacion.ps1 -Estado`.
+
+**En vivo, delante de ti.** `VIGILAR.bat` abre una terminal que se queda
+observando y redibuja el estado cada 20 segundos. No escribe nada, no manda
+correos, no sube nada: solo mira. Lleva un registro de sucesos que anota
+reinicios, placas perdidas o recuperadas, caídas de hashrate, apagones y
+—lo más útil— **cuántas máquinas arrancaron cuando volvió la luz**.
+
+Un uptime que baja significa que la máquina se reinició sola. Ese es el aviso
+que delató el bucle de reinicios de Sara00.
 
 ---
 
