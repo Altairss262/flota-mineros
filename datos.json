@@ -1,15 +1,15 @@
 ﻿{
-    "actualizado":  "2026-09-02T19:24:11-04:00",
-    "actualizadoUnix":  1788391452,
+    "actualizado":  "2026-09-02T19:45:34-04:00",
+    "actualizadoUnix":  1788392734,
     "total":  {
-                  "hashrate":  79.45,
-                  "vatios":  6609,
-                  "kw":  6.61,
+                  "hashrate":  79.48,
+                  "vatios":  6525,
+                  "kw":  6.52,
                   "minerosOnline":  7,
                   "minerosTotal":  7,
                   "placasOk":  20,
                   "placasTotal":  21,
-                  "jth":  83.2
+                  "jth":  82.1
               },
     "mineros":  [
                     {
@@ -17,20 +17,20 @@
                         "host":  "Gabriel01",
                         "ip":  "192.168.0.137",
                         "online":  true,
-                        "hashrate":  12.99,
+                        "hashrate":  12.96,
                         "vatios":  999,
                         "limite":  1000,
-                        "uptimeSeg":  15830,
-                        "aceptadas":  811,
+                        "uptimeSeg":  17112,
+                        "aceptadas":  874,
                         "rechazadas":  1,
                         "placasOk":  3,
                         "placasVistas":  3,
-                        "tempMax":  88.9,
+                        "tempMax":  89.1,
                         "ventiladores":  [
-                                             5040,
-                                             4020
+                                             5100,
+                                             4140
                                          ],
-                        "ventPct":  56,
+                        "ventPct":  59,
                         "estado":  "ok",
                         "avisos":  [
 
@@ -40,15 +40,15 @@
                                            "id":  6,
                                            "estado":  "minando",
                                            "chips":  63,
-                                           "hashrate":  4.32,
+                                           "hashrate":  4.33,
                                            "vatios":  308,
-                                           "temp":  88.9
+                                           "temp":  89.1
                                        },
                                        {
                                            "id":  7,
                                            "estado":  "minando",
                                            "chips":  63,
-                                           "hashrate":  4.22,
+                                           "hashrate":  4.25,
                                            "vatios":  308,
                                            "temp":  0
                                        },
@@ -56,9 +56,9 @@
                                            "id":  8,
                                            "estado":  "minando",
                                            "chips":  63,
-                                           "hashrate":  4.45,
+                                           "hashrate":  4.38,
                                            "vatios":  308,
-                                           "temp":  85.6
+                                           "temp":  85.3
                                        }
                                    ]
                     },
@@ -67,20 +67,20 @@
                         "host":  "Gabriel02",
                         "ip":  "192.168.0.237",
                         "online":  true,
-                        "hashrate":  11.27,
+                        "hashrate":  11.32,
                         "vatios":  999,
                         "limite":  1000,
-                        "uptimeSeg":  15830,
-                        "aceptadas":  1216,
+                        "uptimeSeg":  17112,
+                        "aceptadas":  1291,
                         "rechazadas":  0,
                         "placasOk":  3,
                         "placasVistas":  3,
-                        "tempMax":  88.9,
+                        "tempMax":  89.2,
                         "ventiladores":  [
                                              4320,
                                              3480
                                          ],
-                        "ventPct":  41,
+                        "ventPct":  43,
                         "estado":  "ok",
                         "avisos":  [
 
@@ -90,25 +90,25 @@
                                            "id":  6,
                                            "estado":  "minando",
                                            "chips":  63,
-                                           "hashrate":  3.14,
+                                           "hashrate":  3.18,
                                            "vatios":  308,
-                                           "temp":  86.5
+                                           "temp":  87.2
                                        },
                                        {
                                            "id":  7,
                                            "estado":  "minando",
                                            "chips":  63,
-                                           "hashrate":  4.15,
+                                           "hashrate":  4.13,
                                            "vatios":  308,
-                                           "temp":  83
+                                           "temp":  84
                                        },
                                        {
                                            "id":  8,
                                            "estado":  "minando",
                                            "chips":  63,
-                                           "hashrate":  3.98,
+                                           "hashrate":  4.00,
                                            "vatios":  308,
-                                           "temp":  88.9
+                                           "temp":  89.2
                                        }
                                    ]
                     },
@@ -117,20 +117,20 @@
                         "host":  "Gabriel03",
                         "ip":  "192.168.0.176",
                         "online":  true,
-                        "hashrate":  10.58,
+                        "hashrate":  10.68,
                         "vatios":  894,
                         "limite":  900,
-                        "uptimeSeg":  1464,
-                        "aceptadas":  58,
+                        "uptimeSeg":  2747,
+                        "aceptadas":  110,
                         "rechazadas":  0,
                         "placasOk":  3,
                         "placasVistas":  3,
-                        "tempMax":  89.1,
+                        "tempMax":  89,
                         "ventiladores":  [
-                                             2700,
-                                             4080
+                                             2400,
+                                             3480
                                          ],
-                        "ventPct":  37,
+                        "ventPct":  30,
                         "estado":  "ok",
                         "avisos":  [
 
@@ -140,23 +140,23 @@
                                            "id":  6,
                                            "estado":  "minando",
                                            "chips":  63,
-                                           "hashrate":  3.90,
+                                           "hashrate":  3.95,
                                            "vatios":  274,
-                                           "temp":  83.8
+                                           "temp":  89
                                        },
                                        {
                                            "id":  7,
                                            "estado":  "minando",
                                            "chips":  63,
-                                           "hashrate":  3.64,
+                                           "hashrate":  3.67,
                                            "vatios":  275,
-                                           "temp":  89.1
+                                           "temp":  0
                                        },
                                        {
                                            "id":  8,
                                            "estado":  "minando",
                                            "chips":  63,
-                                           "hashrate":  3.04,
+                                           "hashrate":  3.06,
                                            "vatios":  270,
                                            "temp":  0
                                        }
@@ -167,20 +167,20 @@
                         "host":  "Sara00",
                         "ip":  "192.168.0.145",
                         "online":  true,
-                        "hashrate":  9.05,
-                        "vatios":  825,
+                        "hashrate":  8.74,
+                        "vatios":  750,
                         "limite":  1200,
-                        "uptimeSeg":  2397,
-                        "aceptadas":  109,
+                        "uptimeSeg":  3679,
+                        "aceptadas":  204,
                         "rechazadas":  0,
                         "placasOk":  2,
                         "placasVistas":  3,
-                        "tempMax":  88.8,
+                        "tempMax":  82.1,
                         "ventiladores":  [
-                                             3960,
-                                             4740
+                                             1560,
+                                             2040
                                          ],
-                        "ventPct":  68,
+                        "ventPct":  97,
                         "estado":  "parcial",
                         "avisos":  [
 
@@ -190,7 +190,7 @@
                                            "id":  6,
                                            "estado":  "minando",
                                            "chips":  61,
-                                           "hashrate":  4.45,
+                                           "hashrate":  4.56,
                                            "vatios":  375,
                                            "temp":  0
                                        },
@@ -206,9 +206,9 @@
                                            "id":  8,
                                            "estado":  "minando",
                                            "chips":  63,
-                                           "hashrate":  4.59,
-                                           "vatios":  375,
-                                           "temp":  88.8
+                                           "hashrate":  4.17,
+                                           "vatios":  300,
+                                           "temp":  82.1
                                        }
                                    ]
                     },
@@ -220,17 +220,17 @@
                         "hashrate":  11.82,
                         "vatios":  900,
                         "limite":  900,
-                        "uptimeSeg":  15830,
-                        "aceptadas":  628,
+                        "uptimeSeg":  17112,
+                        "aceptadas":  675,
                         "rechazadas":  0,
                         "placasOk":  3,
                         "placasVistas":  3,
-                        "tempMax":  89.5,
+                        "tempMax":  89.2,
                         "ventiladores":  [
-                                             3720,
-                                             3840
+                                             3180,
+                                             3600
                                          ],
-                        "ventPct":  54,
+                        "ventPct":  46,
                         "estado":  "ok",
                         "avisos":  [
 
@@ -240,15 +240,15 @@
                                            "id":  6,
                                            "estado":  "minando",
                                            "chips":  63,
-                                           "hashrate":  3.98,
+                                           "hashrate":  3.94,
                                            "vatios":  275,
-                                           "temp":  89.5
+                                           "temp":  89.2
                                        },
                                        {
                                            "id":  7,
                                            "estado":  "minando",
                                            "chips":  63,
-                                           "hashrate":  3.88,
+                                           "hashrate":  3.94,
                                            "vatios":  275,
                                            "temp":  0
                                        },
@@ -256,9 +256,9 @@
                                            "id":  8,
                                            "estado":  "minando",
                                            "chips":  63,
-                                           "hashrate":  3.97,
+                                           "hashrate":  3.94,
                                            "vatios":  275,
-                                           "temp":  80.9
+                                           "temp":  81.8
                                        }
                                    ]
                     },
@@ -267,18 +267,68 @@
                         "host":  "Sara03",
                         "ip":  "192.168.0.195",
                         "online":  true,
-                        "hashrate":  12.24,
-                        "vatios":  997,
+                        "hashrate":  12.48,
+                        "vatios":  988,
                         "limite":  1000,
-                        "uptimeSeg":  8620,
-                        "aceptadas":  331,
+                        "uptimeSeg":  9902,
+                        "aceptadas":  373,
                         "rechazadas":  0,
                         "placasOk":  3,
                         "placasVistas":  3,
-                        "tempMax":  88.6,
+                        "tempMax":  89.2,
                         "ventiladores":  [
-                                             4200,
-                                             3720
+                                             3900,
+                                             3180
+                                         ],
+                        "ventPct":  38,
+                        "estado":  "ok",
+                        "avisos":  [
+
+                                   ],
+                        "placas":  [
+                                       {
+                                           "id":  6,
+                                           "estado":  "minando",
+                                           "chips":  63,
+                                           "hashrate":  3.96,
+                                           "vatios":  297,
+                                           "temp":  80.1
+                                       },
+                                       {
+                                           "id":  7,
+                                           "estado":  "minando",
+                                           "chips":  63,
+                                           "hashrate":  4.25,
+                                           "vatios":  308,
+                                           "temp":  87.4
+                                       },
+                                       {
+                                           "id":  8,
+                                           "estado":  "minando",
+                                           "chips":  63,
+                                           "hashrate":  4.27,
+                                           "vatios":  308,
+                                           "temp":  89.2
+                                       }
+                                   ]
+                    },
+                    {
+                        "nombre":  "Sara04",
+                        "host":  "Sara04",
+                        "ip":  "192.168.0.235",
+                        "online":  true,
+                        "hashrate":  11.48,
+                        "vatios":  995,
+                        "limite":  1000,
+                        "uptimeSeg":  2068,
+                        "aceptadas":  87,
+                        "rechazadas":  0,
+                        "placasOk":  3,
+                        "placasVistas":  3,
+                        "tempMax":  89,
+                        "ventiladores":  [
+                                             4080,
+                                             3180
                                          ],
                         "ventPct":  37,
                         "estado":  "ok",
@@ -290,65 +340,15 @@
                                            "id":  6,
                                            "estado":  "minando",
                                            "chips":  63,
-                                           "hashrate":  3.77,
-                                           "vatios":  306,
-                                           "temp":  80.6
-                                       },
-                                       {
-                                           "id":  7,
-                                           "estado":  "minando",
-                                           "chips":  63,
-                                           "hashrate":  4.21,
-                                           "vatios":  308,
-                                           "temp":  87.7
-                                       },
-                                       {
-                                           "id":  8,
-                                           "estado":  "minando",
-                                           "chips":  63,
-                                           "hashrate":  4.25,
-                                           "vatios":  308,
-                                           "temp":  88.6
-                                       }
-                                   ]
-                    },
-                    {
-                        "nombre":  "Sara04",
-                        "host":  "Sara04",
-                        "ip":  "192.168.0.235",
-                        "online":  true,
-                        "hashrate":  11.50,
-                        "vatios":  995,
-                        "limite":  1000,
-                        "uptimeSeg":  786,
-                        "aceptadas":  24,
-                        "rechazadas":  0,
-                        "placasOk":  3,
-                        "placasVistas":  3,
-                        "tempMax":  89,
-                        "ventiladores":  [
-                                             4500,
-                                             3480
-                                         ],
-                        "ventPct":  44,
-                        "estado":  "ok",
-                        "avisos":  [
-
-                                   ],
-                        "placas":  [
-                                       {
-                                           "id":  6,
-                                           "estado":  "minando",
-                                           "chips":  63,
                                            "hashrate":  4.11,
                                            "vatios":  306,
-                                           "temp":  86.2
+                                           "temp":  86.8
                                        },
                                        {
                                            "id":  7,
                                            "estado":  "minando",
                                            "chips":  63,
-                                           "hashrate":  3.19,
+                                           "hashrate":  3.20,
                                            "vatios":  308,
                                            "temp":  89
                                        },
@@ -356,9 +356,9 @@
                                            "id":  8,
                                            "estado":  "minando",
                                            "chips":  63,
-                                           "hashrate":  4.21,
+                                           "hashrate":  4.18,
                                            "vatios":  306,
-                                           "temp":  86.8
+                                           "temp":  86.5
                                        }
                                    ]
                     }
@@ -378,36 +378,36 @@
                                                                                 "Count":  2
                                                                             },
                                                                             {
-                                                                                "t":  1788391095,
-                                                                                "th":  77.68,
-                                                                                "w":  6605,
+                                                                                "t":  1788392374,
+                                                                                "th":  80.03,
+                                                                                "w":  6601,
                                                                                 "m":  7
                                                                             }
                                                                         ],
                                                               "Count":  2
                                                           },
                                                           {
-                                                              "t":  1788391293,
-                                                              "th":  79.43,
-                                                              "w":  6604,
+                                                              "t":  1788392494,
+                                                              "th":  79.93,
+                                                              "w":  6601,
                                                               "m":  7
                                                           }
                                                       ],
                                             "Count":  2
                                         },
                                         {
-                                            "t":  1788391415,
-                                            "th":  79.53,
-                                            "w":  6604,
+                                            "t":  1788392615,
+                                            "th":  79.96,
+                                            "w":  6601,
                                             "m":  7
                                         }
                                     ],
                           "Count":  2
                       },
                       {
-                          "t":  1788391452,
-                          "th":  79.45,
-                          "w":  6609,
+                          "t":  1788392734,
+                          "th":  79.48,
+                          "w":  6525,
                           "m":  7
                       }
                   ],
