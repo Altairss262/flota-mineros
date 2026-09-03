@@ -117,7 +117,8 @@ El diseño en serie es lo que hace eficiente a la máquina: en paralelo harían 
 | `recolector.ps1` | Lee los mineros, genera los datos, avisa y sube |
 | `alertas.config.json` | Selector de avisos — editable desde GitHub |
 | `programar-actualizacion.ps1` | Instala la tarea programada |
-| `VIGILAR.bat` / `VIGILAR.ps1` | Vigilancia en vivo en la terminal, se queda abierta |
+| `VIGILAR.bat` / `VIGILAR.ps1` | Vigilancia continua en la terminal, 3 lecturas por segundo |
+| `SERVIDOR.bat` / `SERVIDOR.ps1` | Sirve el dashboard desde el PC con datos en vivo |
 | `ENCENDER.bat` / `APAGAR.bat` | Encender y apagar el monitor, sin consola |
 | `datos.json` | Estado actual (lo genera el recolector) |
 | `historial.json` | 24 horas de hashrate para la gráfica |
@@ -150,9 +151,10 @@ cuenta de Gmail con clave de aplicación, y cambiar `activado` a `true`.
 
 ---
 
-## Dos formas de vigilar
+## Tres formas de vigilar
 
-Funcionan a la vez y no se estorban.
+Funcionan a la vez y no se estorban. Ninguna de las dos últimas escribe nada:
+no mandan correos, no suben a GitHub, no tocan `datos.json`.
 
 **En segundo plano.** `ENCENDER.bat` programa una tarea de Windows que cada 2
 minutos lee la flota, publica el dashboard y avisa por correo. Se relanza sola
@@ -173,6 +175,24 @@ reinicios, placas perdidas o recuperadas, caídas de hashrate, apagones y
 
 Un uptime que baja significa que la máquina se reinició sola. Ese es el aviso
 que delató el bucle de reinicios de Sara00.
+
+**El dashboard en vivo.** `SERVIDOR.bat` sirve el mismo dashboard desde este PC,
+pero leyendo los mineros en el momento en que el navegador pide los datos. La
+página se refresca **cada segundo** en lugar de cada 30, y también se abre desde
+el móvil por wifi.
+
+Es la única forma de tener el dashboard continuo, porque **GitHub Pages no
+puede**: cada actualización es un commit y su CDN cachea varios minutos. El
+dashboard detecta solo desde dónde se está sirviendo y ajusta el refresco:
+
+| Se abre desde | Refresco |
+|---|---|
+| `localhost` o una IP de la red local | 1 segundo |
+| `altairss262.github.io` | 30 segundos |
+
+Para que el móvil pueda entrar hay que arrancar PowerShell **como
+administrador** — abrir un puerto a toda la red lo exige Windows. Sin permisos
+funciona igual, pero solo en el propio PC, y el servidor lo avisa al arrancar.
 
 ---
 

@@ -345,7 +345,11 @@
 (function () {
   "use strict";
 
-  var REFRESCO_MS = 30000;
+  // Servido desde el PC (SERVIDOR.ps1) los datos son de hace milisegundos, asi
+  // que se puede refrescar cada segundo. Desde GitHub Pages no tiene sentido:
+  // el recolector publica cada 2 minutos y el CDN cachea.
+  var EN_VIVO = /^(localhost|127\.|0\.0\.0\.0|192\.168\.|10\.|172\.(1[6-9]|2\d|3[01])\.)/.test(location.hostname);
+  var REFRESCO_MS = EN_VIVO ? 1000 : 30000;
   var VIEJO_MIN = 10;
 
   var $ = function (id) { return document.getElementById(id); };
