@@ -160,8 +160,14 @@ al encender el PC, así que sobrevive a los apagones. Para comprobar que sigue
 viva: `.\programar-actualizacion.ps1 -Estado`.
 
 **En vivo, delante de ti.** `VIGILAR.bat` abre una terminal que se queda
-observando y redibuja el estado cada 20 segundos. No escribe nada, no manda
-correos, no sube nada: solo mira. Lleva un registro de sucesos que anota
+observando y redibuja **unas 3 veces por segundo**. No escribe nada, no manda
+correos, no sube nada: solo mira.
+
+Va continuo porque lee las siete máquinas **a la vez** en runspaces, pide todo
+en un único comando por conexión (`summary+fans+temps+tunerstatus`) en vez de
+abrir cuatro conexiones seguidas, y reescribe la pantalla encima de sí misma
+sin `Clear-Host`. Una vuelta completa a la flota cuesta unos 80 ms; cada
+máquina contesta en 15-30 ms y su tiempo se ve en la columna `MS`. Lleva un registro de sucesos que anota
 reinicios, placas perdidas o recuperadas, caídas de hashrate, apagones y
 —lo más útil— **cuántas máquinas arrancaron cuando volvió la luz**.
 

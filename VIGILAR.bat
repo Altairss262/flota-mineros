@@ -1,7 +1,7 @@
 @echo off
-title VIGILANCIA DE FLOTA
+title VIGILANCIA CONTINUA DE FLOTA
 color 0B
-mode con: cols=88 lines=40
+mode con: cols=90 lines=34
 cls
-powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0VIGILAR.ps1" -Segundos 20
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0VIGILAR.ps1"
 pause
